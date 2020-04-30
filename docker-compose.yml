@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+
+   example-services:
+        build: .
+        ports:
+           - "4006:4006"

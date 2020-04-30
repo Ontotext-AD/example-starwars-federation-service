@@ -1,0 +1,20 @@
+{
+  "name": "federation-demo",
+  "scripts": {
+    "start-service-swapi-extend": "nodemon extend-swapi/index.js",
+    "start": "concurrently \"npm:start-service-*\"",
+    "postinstall": "lerna bootstrap"
+  },
+  "devDependencies": {
+    "concurrently": "latest",
+    "lerna": "^3.20.2",
+    "nodemon": "latest",
+    "source-map-support": "^0.5.16"
+  },
+  "dependencies": {
+    "@apollo/gateway": "latest",
+    "apollo-server": "^2.5.1-alpha.1",
+    "graphql": "latest",
+    "express": "5.0.0-alpha.7"
+  }
+}
