@@ -4,5 +4,6 @@ services:
 
    example-services:
         build: .
+        image: maven.ontotext.com/example-starwars-federation-service-similarity:0.0.1
         ports:
            - "4006:4006"

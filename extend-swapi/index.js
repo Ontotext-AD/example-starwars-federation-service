@@ -5,6 +5,20 @@ const express = require('express');
 const path = '/graphql';
 const app = express();
 
+// GraphDb Repository
+const {RDFRepositoryClient} = require('graphdb').repository;
+const {GetQueryPayload, QueryType, QueryLanguage, UpdateQueryPayload} = require('graphdb').query;
+const {RepositoryClientConfig} = require('graphdb').repository;
+const {RDFMimeType} = require('graphdb').http;
+const serverAddress = 'http://graphdb:7200';
+const restApiConfig = new RepositoryClientConfig(
+  [`${serverAddress}/repositories/soaas`], {
+    'Accept': RDFMimeType.SPARQL_RESULTS_XML
+  },
+  '', 10000, 10000);
+let rdfClient = new RDFRepositoryClient(restApiConfig);  
+// -- GraphDb end
+
 const typeDefs = gql`
 
   scalar Integer
@@ -28,7 +42,25 @@ const typeDefs = gql`
     IN: [Integer!]
     NIN: [Integer!]
   }
+
+  extend type Human @key(fields: "id") {
+    id: ID! @external
+    similar: [ID]
+  }  
 `
+
+function readStream(stream) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    stream.on('data', (chunk) => {
+      chunks.push(chunk);
+    });
+    stream.on('error', reject);
+    stream.on('end', () => {
+      resolve(Buffer.concat(chunks).toString('utf8').trim());
+    });
+  });
+}
 
 const resolvers = {
   Planet: {
@@ -46,6 +78,46 @@ const resolvers = {
       let gravity = reference.diameter * planet.mass * 100;
       console.log('Calculated gravity [' + this.gravity + ']');
       return gravity
+    }
+  },
+  Human: {
+    similar(reference) {
+      console.log('Human @key/id [' + reference.id + ']');
+      let query = `
+        PREFIX :<http://www.ontotext.com/graphdb/similarity/>
+        PREFIX inst:<http://www.ontotext.com/graphdb/similarity/instance/>
+        PREFIX pubo: <http://ontology.ontotext.com/publishing#>
+        PREFIX voc: <https://swapi.co/vocabulary/>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        SELECT ?documentID ?name ?score 
+        {
+          BIND (<${reference.id}> as ?query)
+            ?search a inst:embeddings ;
+                :searchDocumentID ?query;
+                :searchParameters "";
+                :documentResult ?result .
+            ?result :value ?documentID ;
+                    :score ?score.
+            ?documentID a voc:Human ;
+                        rdfs:label ?name.
+        }` 
+      const payload = new GetQueryPayload()
+        .setQuery(query)
+        .setQueryType(QueryType.SELECT)
+        .setResponseType(RDFMimeType.SPARQL_RESULTS_JSON)
+        .setLimit(100); 
+      let ids = rdfClient.query(payload).then((resp) => {
+          return readStream(resp);
+      }).then((stream) => {
+        let jsonResult = JSON.parse(stream) 
+        let ids = []
+        for (i = 0; i < jsonResult.results.bindings.length; ++i) {
+          ids.push((jsonResult.results.bindings[i].documentID.value))
+        }
+        return ids     
+      });
+      console.log(`Ids [${ids}]`) 
+      return ids  
     }
   }
 };
