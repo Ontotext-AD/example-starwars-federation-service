@@ -10,7 +10,7 @@ const typeDefs = gql`
   scalar Integer
 
   extend type Planet @key(fields: "id") {
-    id: ID! @external
+    id: ID @external
     diameter: Integer @external
     mass: Int
     calculatedGravity: String @requires(fields: "diameter")
