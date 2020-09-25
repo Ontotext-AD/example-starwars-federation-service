@@ -20,6 +20,8 @@
     "apollo-server-express": "^2.18.1",
     "express": "5.0.0-alpha.7",
     "graphql": "^14.7.0",
-    "ontotext-platform-custom-scalars": "^0.1.0"
+    "ontotext-platform-custom-scalars": "^0.1.0",
+    "dot-prop": ">=4.2.1",
+    "node-fetch": ">=2.6.1"
   }
 }
