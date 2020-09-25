@@ -1,11 +1,12 @@
-const { ApolloServer, gql } = require("apollo-server-express");
-const { buildFederatedSchema } = require("@apollo/federation");
-const express = require('express');
+const { ApolloServer, gql } = require("apollo-server-express")
+const { buildFederatedSchema } = require("@apollo/federation")
+const { GraphQLInteger } = require("ontotext-platform-custom-scalars")
+const express = require('express')
 
-const path = '/graphql';
-const app = express();
+const path = '/graphql'
+const app = express()
 
-const typeDefs = gql`
+const typeDefs = gql`    
 
   scalar Integer
 
@@ -31,6 +32,7 @@ const typeDefs = gql`
 `
 
 const resolvers = {
+  Integer: GraphQLInteger,
   Planet: {
     __resolveReference(reference) {
       return {
@@ -59,8 +61,8 @@ app.get('/__health', function (req, res){
   res.setHeader('Content-Type', 'application/json');
   res.end(JSON.stringify({
         status: "OK",
-        id: `example/1`,
-        name: 'Example Health Check',
+        id: `9500`,
+        name: 'SWAPI SOAAS Extension Health Check',
         type: 'graphql',
         healthChecks: []
       })
@@ -84,7 +86,7 @@ const server = new ApolloServer({
 server.applyMiddleware({app: app, path: path});
 
 app.listen({ port: 4006 }, () => {
-  console.log(`🚀 Server ready at http://localhost:4006${server.graphqlPath}`);
+  console.log(`🚀 Server ready at http://swapiextended:4006${server.graphqlPath}`);
 });
 
 const planetList = [
