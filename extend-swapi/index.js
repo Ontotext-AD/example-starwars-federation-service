@@ -1,15 +1,133 @@
-const { ApolloServer, gql } = require("apollo-server-express")
-const { buildFederatedSchema } = require("@apollo/federation")
-const { GraphQLInteger } = require("ontotext-platform-custom-scalars")
-const express = require('express')
+const { ApolloServer, gql } = require("apollo-server-express");
+const { buildFederatedSchema } = require("@apollo/federation");
+const { GraphQLInteger } = require("ontotext-platform-custom-scalars");
+const express = require('express');
 
-const path = '/graphql'
-const app = express()
+const path = '/graphql';
+const app = express();
 
-const typeDefs = gql`    
+const typeDefs = gql`
 
   scalar Integer
 
+  interface Character @key(fields: "id") {
+      id: ID
+  }
+  type Aleena @key(fields: "id") {
+      id: ID
+  }
+  type Besalisk @key(fields: "id") {
+      id: ID
+  }
+  type Cerean @key(fields: "id") {
+      id: ID
+  }
+  type Chagrian @key(fields: "id") {
+      id: ID
+  }
+  type Clawdite @key(fields: "id") {
+      id: ID
+  }
+  type Droid @key(fields: "id") {
+      id: ID
+  }
+  type Dug @key(fields: "id") {
+      id: ID
+  }
+  type Ewok @key(fields: "id") {
+      id: ID
+  }
+  type Geonosian @key(fields: "id") {
+      id: ID
+  }
+  type Human @key(fields: "id") {
+      id: ID
+  }
+  type Hutt @key(fields: "id") {
+      id: ID
+  }
+  type Iktotchi @key(fields: "id") {
+      id: ID
+  }
+  type Kaleesh @key(fields: "id") {
+      id: ID
+  }
+  type Kaminoan @key(fields: "id") {
+      id: ID
+  }
+  type Keldor @key(fields: "id") {
+      id: ID
+  }
+  type Mirialan @key(fields: "id") {
+      id: ID
+  }
+  type Moncalamari @key(fields: "id") {
+      id: ID
+  }
+  type Gungan @key(fields: "id") {
+      id: ID
+  }
+  type Muun @key(fields: "id") {
+      id: ID
+  }
+  type Nautolan @key(fields: "id") {
+      id: ID
+  }
+  type Neimodian @key(fields: "id") {
+      id: ID
+  }
+  type Pauan @key(fields: "id") {
+      id: ID
+  }
+  type Quermian @key(fields: "id") {
+      id: ID
+  }
+  type Rodian @key(fields: "id") {
+      id: ID
+  }
+  type Skakoan @key(fields: "id") {
+      id: ID
+  }
+  type Sullustan @key(fields: "id") {
+      id: ID
+  }
+  type Tholothian @key(fields: "id") {
+      id: ID
+  }
+  type Togruta @key(fields: "id") {
+      id: ID
+  }
+  type Toong @key(fields: "id") {
+      id: ID
+  }
+  type Toydarian @key(fields: "id") {
+      id: ID
+  }
+  type Trandoshan @key(fields: "id") {
+      id: ID
+  }
+  type Twilek @key(fields: "id") {
+      id: ID
+  }
+  type Umbaran @key(fields: "id") {
+      id: ID
+  }
+  type Vulptereen @key(fields: "id") {
+      id: ID
+  }
+  type Wookiee @key(fields: "id") {
+      id: ID
+  }
+  type Xexto @key(fields: "id") {
+      id: ID
+  }
+  type Yodasspecies @key(fields: "id") {
+      id: ID
+  }
+  type Zabrak @key(fields: "id") {
+      id: ID
+  }
+  
   extend type Planet @key(fields: "id") {
     id: ID @external
     diameter: Integer @external
